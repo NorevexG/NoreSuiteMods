@@ -1,0 +1,33 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+
+[[mods]]
+modId="noreteams"
+version="${mod_version}"
+displayName="Nore Teams"
+authors="Norevex"
+description='''
+OPAC-backed teams and alliances for the Nore modpack.
+'''
+
+[[dependencies.noreteams]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.noreteams]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.noreteams]]
+    modId="openpartiesandclaims"
+    type="required"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
