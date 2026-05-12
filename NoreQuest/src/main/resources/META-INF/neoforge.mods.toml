@@ -1,0 +1,50 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+
+[[mods]]
+modId="norequest"
+version="${mod_version}"
+displayName="NoreQuest"
+authors="Norevex"
+description='''
+Adds solo, team, and allied quest completion modes for FTB Quests using Nore Teams, while disabling FTB Teams gameplay surfaces.
+'''
+
+[[mixins]]
+config="norequest.mixins.json"
+
+[[dependencies.norequest]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.norequest]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.norequest]]
+    modId="noreteams"
+    type="required"
+    versionRange="[${mod_version},)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.norequest]]
+    modId="ftbquests"
+    type="required"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.norequest]]
+    modId="ftbteams"
+    type="optional"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"

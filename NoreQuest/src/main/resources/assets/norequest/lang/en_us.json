@@ -1,0 +1,9 @@
+{
+  "modmenu.descriptionTranslation.norequest": "Nore Teams compatibility for FTB Quests and FTB Teams.",
+  "norequest": "Nore Quest",
+  "norequest.category": "Nore Quest",
+  "norequest.completion_mode": "Completion Mode",
+  "norequest.completion_mode.solo": "Solo",
+  "norequest.completion_mode.team": "Team",
+  "norequest.completion_mode.allied": "Allied"
+}

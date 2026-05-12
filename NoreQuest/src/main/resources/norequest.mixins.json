@@ -1,0 +1,18 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.nore.quest.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "FtbItemTaskCompletionMixin",
+    "FtbQuestModeMixin",
+    "FtbTaskSubmitActorMixin",
+    "FtbTeamDataProgressMixin"
+  ],
+  "client": [
+    "FtbTeamsClientMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}
