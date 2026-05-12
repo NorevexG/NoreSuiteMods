@@ -1,0 +1,254 @@
+plugins {
+    id 'net.neoforged.gradle.userdev' version '7.1.25' apply false
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+    apply plugin: 'net.neoforged.gradle.userdev'
+
+    group = mod_group_id
+    version = mod_version
+
+    base {
+        archivesName = project.name.toLowerCase()
+    }
+
+    java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://maven.neoforged.net/releases' }
+    }
+
+    dependencies {
+        implementation "net.neoforged:neoforge:${neo_version}"
+    }
+
+    runs {
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'forge.logging.console.level', 'debug'
+            workingDirectory project.layout.projectDirectory.dir('run').dir(name)
+            modSource project.sourceSets.main
+        }
+
+        client {
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.name.toLowerCase()
+        }
+
+        server {
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.name.toLowerCase()
+            argument '--nogui'
+        }
+    }
+
+    tasks.withType(ProcessResources).configureEach {
+        def replaceProperties = [
+                minecraft_version      : minecraft_version,
+                minecraft_version_range: minecraft_version_range,
+                neo_version            : neo_version,
+                loader_version_range   : loader_version_range,
+                mod_version            : mod_version,
+                mod_license            : mod_license
+        ]
+        inputs.properties replaceProperties
+
+        filesMatching(['META-INF/neoforge.mods.toml']) {
+            expand replaceProperties
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(JavaExec).configureEach {
+        if (name.startsWith('run')) {
+            notCompatibleWithConfigurationCache('NeoGradle Minecraft run tasks resolve mod runtime classpaths at execution time.')
+        }
+    }
+}
+
+project(':NoreTeams') {
+    dependencies {
+        def localModLibs = fileTree(dir: project.projectDir.toPath().resolve('libs').toFile(), include: ['*.jar'])
+        compileOnly localModLibs
+        runtimeOnly localModLibs
+    }
+
+    runs {
+        client {
+            argument '--username'
+            argument 'Dev'
+        }
+
+        create('client2') {
+            configureFromTypeWithName false
+            runType 'client'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.name.toLowerCase()
+            argument '--username'
+            argument 'Dev2'
+        }
+
+        create('client3') {
+            configureFromTypeWithName false
+            runType 'client'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.name.toLowerCase()
+            argument '--username'
+            argument 'Dev3'
+        }
+    }
+
+    tasks.register('prepareLocalRunMods', Copy) {
+        from project.layout.projectDirectory.dir('libs')
+        include '*.jar'
+        into project.layout.projectDirectory.dir('run/client/mods')
+    }
+
+    tasks.register('prepareClient2RunMods', Copy) {
+        from project.layout.projectDirectory.dir('libs')
+        include '*.jar'
+        into project.layout.projectDirectory.dir('run/client2/mods')
+    }
+
+    tasks.register('prepareClient3RunMods', Copy) {
+        from project.layout.projectDirectory.dir('libs')
+        include '*.jar'
+        into project.layout.projectDirectory.dir('run/client3/mods')
+    }
+
+    tasks.register('prepareLocalServerRunMods', Copy) {
+        from project.layout.projectDirectory.dir('libs')
+        include '*.jar'
+        into project.layout.projectDirectory.dir('run/server/mods')
+    }
+
+    tasks.matching { it.name == 'runClient' }.configureEach {
+        dependsOn tasks.named('prepareLocalRunMods')
+    }
+
+    tasks.matching { it.name == 'runClient2' }.configureEach {
+        dependsOn tasks.named('prepareClient2RunMods')
+    }
+
+    tasks.matching { it.name == 'runClient3' }.configureEach {
+        dependsOn tasks.named('prepareClient3RunMods')
+    }
+
+    tasks.matching { it.name == 'runServer' }.configureEach {
+        dependsOn tasks.named('prepareLocalServerRunMods')
+    }
+}
+
+project(':NoreQuest') {
+    base {
+        archivesName = 'NoreQuest'
+    }
+
+    dependencies {
+        def ftbModLibs = fileTree(dir: project.projectDir.toPath().resolve('lib').toFile(), include: ['*.jar'], exclude: ['noreteams-*.jar'])
+        compileOnly ftbModLibs
+        runtimeOnly ftbModLibs
+        compileOnly project(':NoreTeams')
+    }
+
+    runs {
+        client {
+            argument '--username'
+            argument 'QuestDev'
+        }
+
+        create('client2') {
+            configureFromTypeWithName false
+            runType 'client'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.name.toLowerCase()
+            argument '--username'
+            argument 'QuestDev2'
+        }
+
+        create('client3') {
+            configureFromTypeWithName false
+            runType 'client'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.name.toLowerCase()
+            argument '--username'
+            argument 'QuestDev3'
+        }
+    }
+
+    tasks.register('prepareNoreQuestClientMods', Copy) {
+        dependsOn project(':NoreTeams').tasks.named('jar')
+        from(project.layout.projectDirectory.dir('lib')) {
+            include '*.jar'
+            exclude 'noreteams-*.jar'
+        }
+        from(project(':NoreTeams').layout.projectDirectory.dir('libs')) {
+            include '*.jar'
+        }
+        from(project(':NoreTeams').layout.buildDirectory.dir('libs')) {
+            include 'noreteams-*.jar'
+        }
+        into project.layout.projectDirectory.dir('run/client/mods')
+    }
+
+    tasks.register('prepareNoreQuestClient2Mods', Copy) {
+        dependsOn project(':NoreTeams').tasks.named('jar')
+        from(project.layout.projectDirectory.dir('lib')) {
+            include '*.jar'
+            exclude 'noreteams-*.jar'
+        }
+        from(project(':NoreTeams').layout.projectDirectory.dir('libs')) {
+            include '*.jar'
+        }
+        from(project(':NoreTeams').layout.buildDirectory.dir('libs')) {
+            include 'noreteams-*.jar'
+        }
+        into project.layout.projectDirectory.dir('run/client2/mods')
+    }
+
+    tasks.register('prepareNoreQuestClient3Mods', Copy) {
+        dependsOn project(':NoreTeams').tasks.named('jar')
+        from(project.layout.projectDirectory.dir('lib')) {
+            include '*.jar'
+            exclude 'noreteams-*.jar'
+        }
+        from(project(':NoreTeams').layout.projectDirectory.dir('libs')) {
+            include '*.jar'
+        }
+        from(project(':NoreTeams').layout.buildDirectory.dir('libs')) {
+            include 'noreteams-*.jar'
+        }
+        into project.layout.projectDirectory.dir('run/client3/mods')
+    }
+
+    tasks.register('prepareNoreQuestServerMods', Copy) {
+        dependsOn project(':NoreTeams').tasks.named('jar')
+        from(project.layout.projectDirectory.dir('lib')) {
+            include '*.jar'
+            exclude 'noreteams-*.jar'
+        }
+        from(project(':NoreTeams').layout.projectDirectory.dir('libs')) {
+            include '*.jar'
+        }
+        from(project(':NoreTeams').layout.buildDirectory.dir('libs')) {
+            include 'noreteams-*.jar'
+        }
+        into project.layout.projectDirectory.dir('run/server/mods')
+    }
+
+    tasks.matching { it.name == 'runClient' }.configureEach {
+        dependsOn tasks.named('prepareNoreQuestClientMods')
+    }
+
+    tasks.matching { it.name == 'runClient2' }.configureEach {
+        dependsOn tasks.named('prepareNoreQuestClient2Mods')
+    }
+
+    tasks.matching { it.name == 'runClient3' }.configureEach {
+        dependsOn tasks.named('prepareNoreQuestClient3Mods')
+    }
+
+    tasks.matching { it.name == 'runServer' }.configureEach {
+        dependsOn tasks.named('prepareNoreQuestServerMods')
+    }
+}
