@@ -1,29 +1,21 @@
-# Nore Mods Suite
+# Nore Teams Suite
 
-Source workspace for NoreTeams and NoreQuest.
+Shared NeoForge 1.21.1 workspace for the Nore mod suite.
 
 ## Modules
 
-- `NoreTeams`: OPAC-backed teams and alliances used by the Nore modpack.
-- `NoreQuest`: FTB Quests integration that adds Solo, Team, and Allied completion modes using NoreTeams, while suppressing FTB Teams gameplay surfaces.
+- `NoreTeams`: OPAC-backed team/alliance API, commands, and client screen.
+- `NoreQuest`: optional FTB Teams/FTB Quests compatibility for quest completion sharing.
+- `NoreStages`: progression stages, rank-based enemy indicators, recipe/content gates, and optional integrations.
+- `NoreStages RDI Compat`: Retro Damage Indicators HUD compatibility for NoreStages enemy rank warnings.
 
-## Dependencies
+## Licenses
 
-NoreTeams requires:
+- `NoreTeams`: GNU Lesser General Public License version 3 (LGPLv3)
+- `NoreQuest`: MIT
+- `NoreStages`: GNU Lesser General Public License version 3 (LGPLv3)
+- `NoreStages RDI Compat`: MIT
 
-- Minecraft
-- NeoForge
-- Open Parties and Claims
+## Local Dependencies
 
-NoreQuest requires:
-
-- Minecraft
-- NeoForge
-- NoreTeams
-- FTB Quests
-
-FTB Quests provides its own dependency chain, including FTB Teams, FTB Library, and Architectury.
-
-## Notes
-
-Local dependency jars and run folders are intentionally not included in this repository. Add the required mod jars to the local development folders when building or running the workspace.
+Some optional integration jars are expected in each module's local `lib` or `libs` folder for development builds. These third-party jars are not part of the source snapshot.

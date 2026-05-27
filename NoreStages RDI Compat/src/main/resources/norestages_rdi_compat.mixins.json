@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.nore.stages.rdi.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "RetroDamageIndicatorsAccessor",
+    "RetroDamageIndicatorsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

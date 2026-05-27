@@ -1,0 +1,17 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.nore.stages.mixin",
+  "plugin": "com.nore.stages.mixin.NoreStagesMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "CraftingMenuMixin",
+    "FtbChapterMixin",
+    "FtbQuestMixin",
+    "PatrolSpawnerMixin",
+    "RaidsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

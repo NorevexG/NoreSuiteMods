@@ -8,7 +8,7 @@ subprojects {
     apply plugin: 'net.neoforged.gradle.userdev'
 
     group = mod_group_id
-    version = mod_version
+    version = findProperty("${project.name.toLowerCase()}_version") ?: mod_version
 
     base {
         archivesName = project.name.toLowerCase()
@@ -44,13 +44,15 @@ subprojects {
     }
 
     tasks.withType(ProcessResources).configureEach {
+        def projectKey = project.name.toLowerCase().replaceAll(/\s+/, '')
+        def projectLicense = findProperty("${projectKey}_license") ?: mod_license
         def replaceProperties = [
                 minecraft_version      : minecraft_version,
                 minecraft_version_range: minecraft_version_range,
                 neo_version            : neo_version,
                 loader_version_range   : loader_version_range,
-                mod_version            : mod_version,
-                mod_license            : mod_license
+                mod_version            : project.version.toString(),
+                mod_license            : projectLicense
         ]
         inputs.properties replaceProperties
 
@@ -250,5 +252,41 @@ project(':NoreQuest') {
 
     tasks.matching { it.name == 'runServer' }.configureEach {
         dependsOn tasks.named('prepareNoreQuestServerMods')
+    }
+}
+
+project(':NoreStages RDI Compat') {
+    base {
+        archivesName = 'NoreStages-RDI-Compat'
+    }
+
+    version = norestages_rdi_compat_version
+
+    dependencies {
+        compileOnly project(':NoreStages')
+        compileOnly fileTree(dir: 'lib', include: ['*.jar'])
+        runtimeOnly fileTree(dir: 'lib', include: ['*.jar'])
+    }
+
+    runs {
+        client {
+            argument '--username'
+            argument 'RdiCompatDev'
+        }
+    }
+
+    tasks.register('prepareRdiCompatClientMods', Copy) {
+        dependsOn project(':NoreStages').tasks.named('jar')
+        from(project.layout.projectDirectory.dir('lib')) {
+            include '*.jar'
+        }
+        from(project(':NoreStages').layout.buildDirectory.dir('libs')) {
+            include 'NoreStages-*.jar'
+        }
+        into project.layout.projectDirectory.dir('run/client/mods')
+    }
+
+    tasks.matching { it.name == 'runClient' }.configureEach {
+        dependsOn tasks.named('prepareRdiCompatClientMods')
     }
 }

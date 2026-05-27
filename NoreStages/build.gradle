@@ -1,0 +1,42 @@
+base {
+    archivesName = 'NoreStages'
+}
+
+dependencies {
+    compileOnly fileTree(dir: 'lib', include: ['jei-*.jar', 'ftb-quests-*.jar', 'architectury-*.jar'])
+}
+
+runs {
+    client {
+        argument '--username'
+        argument 'StageDev'
+    }
+
+    create('client2') {
+        configureFromTypeWithName false
+        runType 'client'
+        systemProperty 'neoforge.enabledGameTestNamespaces', project.name.toLowerCase()
+        argument '--username'
+        argument 'StageDev2'
+    }
+}
+
+tasks.register('prepareClient2RunMods', Copy) {
+    from project.layout.projectDirectory.dir('run/client/mods')
+    include '*.jar'
+    into project.layout.projectDirectory.dir('run/client2/mods')
+}
+
+tasks.register('prepareServerRunMods', Copy) {
+    from project.layout.projectDirectory.dir('run/client/mods')
+    include 'architectury-*.jar', 'ftb-*.jar', 'noreteams-*.jar', 'norequest-*.jar'
+    into project.layout.projectDirectory.dir('run/server/mods')
+}
+
+tasks.matching { it.name == 'runClient2' }.configureEach {
+    dependsOn tasks.named('prepareClient2RunMods')
+}
+
+tasks.matching { it.name == 'runServer' }.configureEach {
+    dependsOn tasks.named('prepareServerRunMods')
+}

@@ -4,6 +4,7 @@ import com.nore.quest.api.QuestCompletionMode;
 import com.nore.quest.ftb.FtbQuestModeAccess;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import dev.ftb.mods.ftblibrary.config.ConfigGroup;
 import dev.ftb.mods.ftblibrary.config.NameMap;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,6 +28,16 @@ public abstract class FtbQuestModeMixin {
     @Inject(method = "writeData", at = @At("TAIL"), remap = false)
     private void norequest$writeCompletionMode(CompoundTag tag, HolderLookup.Provider provider, CallbackInfo ci) {
         FtbQuestModeAccess.write(this, tag);
+    }
+
+    @Inject(method = "readNetData", at = @At("TAIL"), remap = false)
+    private void norequest$readCompletionModeNet(RegistryFriendlyByteBuf buffer, CallbackInfo ci) {
+        FtbQuestModeAccess.set(this, buffer.readEnum(QuestCompletionMode.class));
+    }
+
+    @Inject(method = "writeNetData", at = @At("TAIL"), remap = false)
+    private void norequest$writeCompletionModeNet(RegistryFriendlyByteBuf buffer, CallbackInfo ci) {
+        buffer.writeEnum(FtbQuestModeAccess.get(this));
     }
 
     @Inject(method = "fillConfigGroup", at = @At("TAIL"), remap = false)

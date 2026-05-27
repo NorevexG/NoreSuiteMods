@@ -274,6 +274,19 @@ public final class QuestShareService {
         }
     }
 
+    public static QuestCompletionMode modeForQuestId(MinecraftServer server, String questId) {
+        Object quest = loadedQuest(server, questId);
+        if (quest != null) {
+            return modeFor(server, quest);
+        }
+        return QuestModeStore.get(server, questId);
+    }
+
+    public static void setQuestMode(MinecraftServer server, String questId, QuestCompletionMode mode) {
+        QuestModeStore.set(server, questId, mode);
+        setLoadedQuestMode(server, questId, mode);
+    }
+
     public static boolean diagnosticsEnabled() {
         return diagnosticsEnabled;
     }
@@ -407,6 +420,23 @@ public final class QuestShareService {
             return QuestModeStore.get(server, questId);
         }
         return FtbQuestModeAccess.get(quest);
+    }
+
+    private static Object loadedQuest(MinecraftServer server, String questId) {
+        Object serverQuestFile = serverQuestFile();
+        if (serverQuestFile == null) {
+            return null;
+        }
+        try {
+            long id = Long.parseUnsignedLong(questId, 16);
+            Object quest = Reflector.call(serverQuestFile, "get", id).orElse(null);
+            if (quest != null && "dev.ftb.mods.ftbquests.quest.Quest".equals(quest.getClass().getName())) {
+                return quest;
+            }
+        } catch (NumberFormatException ignored) {
+            NoreQuest.LOGGER.debug("Could not parse FTB quest id {} while reading Nore Quest mode", questId);
+        }
+        return null;
     }
 
     private static boolean canAcceptProgress(Object teamData, Object task, Object quest) {

@@ -1,0 +1,71 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+
+[[mods]]
+modId="norestages"
+version="${mod_version}"
+displayName="NoreStages"
+authors="Norevex"
+description='''
+Server and team progression stages for the Nore modpack suite.
+'''
+
+[[mixins]]
+config="norestages.mixins.json"
+
+[[dependencies.norestages]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.norestages]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.norestages]]
+    modId="noreteams"
+    type="optional"
+    versionRange="[${mod_version},)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.norestages]]
+    modId="jei"
+    type="optional"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="CLIENT"
+
+[[dependencies.norestages]]
+    modId="ftblibrary"
+    type="optional"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.norestages]]
+    modId="ftbteams"
+    type="optional"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.norestages]]
+    modId="ftbquests"
+    type="optional"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.norestages]]
+    modId="norequest"
+    type="optional"
+    versionRange="[${mod_version},)"
+    ordering="AFTER"
+    side="BOTH"

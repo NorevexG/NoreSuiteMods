@@ -1,0 +1,43 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+
+[[mods]]
+modId="norestages_rdi_compat"
+version="${mod_version}"
+displayName="NoreStages RDI Compat"
+authors="Norevex"
+description='''
+Adds NoreStages danger badges to the Retro Damage Indicators HUD.
+'''
+
+[[mixins]]
+config="norestages_rdi_compat.mixins.json"
+
+[[dependencies.norestages_rdi_compat]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.norestages_rdi_compat]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.norestages_rdi_compat]]
+    modId="norestages"
+    type="required"
+    versionRange="[0.1.1,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.norestages_rdi_compat]]
+    modId="retrodamageindicators"
+    type="required"
+    versionRange="[1.0.2,)"
+    ordering="AFTER"
+    side="CLIENT"

@@ -12,3 +12,5 @@ plugins {
 rootProject.name = 'NoreTeamsSuite'
 include 'NoreTeams'
 include 'NoreQuest'
+include 'NoreStages'
+include 'NoreStages RDI Compat'

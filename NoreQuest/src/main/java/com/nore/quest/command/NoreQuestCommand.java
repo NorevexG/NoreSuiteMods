@@ -45,8 +45,7 @@ public final class NoreQuestCommand {
 
     private static int setMode(CommandSourceStack source, String questId, String modeName) {
         QuestCompletionMode mode = QuestCompletionMode.parse(modeName);
-        QuestModeStore.set(source.getServer(), questId, mode);
-        QuestShareService.setLoadedQuestMode(source.getServer(), questId, mode);
+        QuestShareService.setQuestMode(source.getServer(), questId, mode);
         source.sendSuccess(() -> Component.literal("Quest " + questId + " mode set to " + mode.name().toLowerCase()), true);
         return 1;
     }
